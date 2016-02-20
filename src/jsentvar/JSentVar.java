@@ -1,6 +1,13 @@
 package jsentvar;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import org.apache.jena.query.Query;
+import org.apache.jena.query.QueryExecution;
+import org.apache.jena.query.QueryExecutionFactory;
+import org.apache.jena.query.QueryFactory;
+import org.apache.jena.query.ResultSet;
+import org.apache.jena.query.ResultSetFormatter;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Resource;
@@ -21,23 +28,20 @@ public class JSentVar {
         //Log.setLog4j("jena-log4j.properties");
         RDFReader lector = new RDFReader();
         String filename;
-        filename = "/root/sincron/programacio/java/netbeans/jSentVar/resources/TaxoCorregidaXMLRDF.owl";
+        filename = "/root/sincron/programacio/java"+
+                "/netbeans/jSentVar/resources/IEEE_reasoner20022016.owl";
         Model model = ModelFactory.createDefaultModel();
-        String term_value = "http://glluch.com/ieee_taxonomy#ARPANET";
+        String term_value = "Approximation methods";
         model = lector.reader(filename);
         Resource term = model.getResource(term_value);
-        StmtIterator properties = term.listProperties();
+        //StmtIterator properties = term.listProperties();
         System.out.print(term.toString() + "\n");
-        while (properties.hasNext()) {
-            Statement prop = properties.nextStatement();
-            Resource entity = prop.getResource();
-            Resource accessor = prop.getSubject();
-            String m = "Object=" + entity.toString() + ", accessor=" + accessor.toString();
-            m = m + " rel=" + prop.getPredicate().toString();
-            System.out.println(m);
-            //getResource()
-        }//end while
+        
+        Surrogate sur=new Surrogate(term_value,model);
+        ArrayList <String> new_terms=sur.getSurrogates("wide");
+        System.out.println(new_terms.toString());
 
+        
     }
 
 }

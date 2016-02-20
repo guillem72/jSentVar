@@ -1,0 +1,16 @@
+ SELECT ?parent
+WHERE {<http://glluch.com/ieee_taxonomy#Abstract_algebra>  <http://www.w3.org/2001/vcard-rdf/3.0#FN>  ?parent} 
+ 
+ 
+      String queryString = 
+	
+
+Query query = QueryFactory.create(queryString);
+
+        try (// Execute the query and obtain results
+                QueryExecution qe = QueryExecutionFactory.create(query, model)) {
+            ResultSet results = qe.execSelect();
+// Output query results	
+ResultSetFormatter.out(System.out, results, query);
+// Important - free up resources used running the query
+        }
