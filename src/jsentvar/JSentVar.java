@@ -31,6 +31,7 @@ public class JSentVar {
         filename = "/root/sincron/programacio/java"+
                 "/netbeans/jSentVar/resources/IEEE_reasoner20022016.owl";
         Model model = ModelFactory.createDefaultModel();
+        
         String term_value = "Approximation methods";
         model = lector.reader(filename);
         Resource term = model.getResource(term_value);
