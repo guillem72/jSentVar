@@ -39,7 +39,8 @@ public class JSentVar {
         System.out.print(term.toString() + "\n");
         
         Surrogate sur=new Surrogate(term_value,model);
-        ArrayList <String> new_terms=sur.getSurrogates("wide");
+        //ArrayList <String> new_terms=sur.getSurrogates("wide");
+        ArrayList <String> new_terms=sur.getSurrogates();
         System.out.println(new_terms.toString());
 
         
