@@ -29,8 +29,9 @@ import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.RDFNode;
 
 /**
- *
- * @author Guillem LLuch Moll <guillem72@gmail.com>
+ * A class in charge to query and comunication with database and files
+ * 
+ * @author Guillem LLuch Moll guillem72@gmail.com
  */
 public class DataMapper {
      private Model model;
@@ -43,7 +44,13 @@ public class DataMapper {
         this.model = model;
     }
     
-    
+    /**
+     * Do a sparql query retrieving the related uris. 
+     * The query is constructed in the method <b>surrogate.preQuery</b> 
+     * @param queryString Query constructed in the method surrogate.preQuery
+     * @param mode And indication for choose the right label
+     * @return ArrayList[uris] The list of uris related to the term. 
+      */
     public ArrayList<String> getUris(String queryString, String mode){
         ArrayList<String> uris = new ArrayList<>(); 
         Query query = QueryFactory.create(queryString);
@@ -51,7 +58,7 @@ public class DataMapper {
         try (// Execute the query and obtain results
                 QueryExecution qe = QueryExecutionFactory.create(query, this.model)) {
             ResultSet results = qe.execSelect();
-// Output query results       ResultSetFormatter.out(System.out, results, query);
+
 // Important - free up resources used running the query
             for (; results.hasNext();) {
                 // Access variables: soln.get("x") ;
@@ -67,16 +74,28 @@ public class DataMapper {
         return uris;
     }// getUris
     
-     protected String queryLabel(String term_uri){
+    /**
+     *Construct the string to do a sparql query to get the label of a given uri 
+     * @param term_uri  The uri of a term 
+     * @return The query to retrive a label.
+     */
+    protected String queryLabel(String term_uri){
     String label;
     //label=" SELECT ?label " + "WHERE {<"+ term_uri +"> <rdfs:label xml:lang=\"en\">"+
        //     "  ?label} ";
        label=" SELECT ?label " + "WHERE {<"+ term_uri +"> <http://www.w3.org/2000/01/rdf-schema#label>"+
           "  ?label} ";
-     //System.out.println(label);
+      
+     //System.out.println("LABEL="+label);
     return label;
     }
 
+    /**
+     * Get the value of a label. 
+     * @param uri The uri of the term.
+     * @return The label, a human readable string for the term.
+     * 
+     */
     public String getLabel(String uri) {
         //System.out.println(uri);
         String result="";

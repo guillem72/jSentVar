@@ -17,14 +17,14 @@
 package jsentvar;
 
 import java.util.ArrayList;
-import java.util.Iterator;
-import org.apache.jena.query.*;
+
 import org.apache.jena.rdf.model.Model;
-import org.apache.jena.rdf.model.RDFNode;
+
 
 /**
- *
- * @author Guillem LLuch Moll <guillem72@gmail.com>
+ * Given a term return all related terms in the taxonomy. The taxonomy must
+ * have  relations "wide" and "narrowed". For a term, this class can retrieve one or both of them.
+ * @author Guillem LLuch Moll guillem72@gmail.com
  */
 public class Surrogate implements iSurrogate {
 
@@ -33,6 +33,11 @@ public class Surrogate implements iSurrogate {
     protected String base_uri = "http://glluch.com/ieee_taxonomy#";
     protected DataMapper dataMapper;
 
+    /**
+     * Create an instance base of a term and a org.apache.jena.rdf.model.
+     * @param term The term for which related terms are needed.
+     * @param model The org.apache.jena.rdf.model.
+     */
     public Surrogate(String term, Model model) {
         this.term = term;
         this.model = model;
@@ -40,26 +45,36 @@ public class Surrogate implements iSurrogate {
         dataMapper.setModel(this.model);
     }
 
+    /**
+     * Retrieve the terms related to the surrogate.term in the model
+     * @param mode In this implementation could be "wide" or "narrowed".
+     * @return An array of Terms with the relation "mode", from the label of the RDF/XML. 
+     */
     @Override
     public ArrayList<String> getSurrogates(String mode) {
         String term_id = this.term.replace(" ", "_");
         ArrayList<String> surros = new ArrayList<>();
-        ArrayList<String> uris = new ArrayList<>();
+        ArrayList<String> uris;
         String queryString = preQuery(mode, term_id);
         if (queryString.isEmpty()) {
             return surros;
         }//TODO error
         uris = dataMapper.getUris(queryString, mode);
 
-        for (String uri : uris) {
+        uris.stream().forEach((uri) -> {
             //System.out.println(uri);
             String label=dataMapper.getLabel(uri);
-            if (!label.isEmpty())
-            surros.add(dataMapper.getLabel(uri));
-        }
+            if (!label.isEmpty()) {
+                surros.add(dataMapper.getLabel(uri));
+            }
+        });
         return surros;
     }
 
+    /**
+     * Retrieve the terms related to the surrogate.term in the model. 
+     * @return An array of terms related to this.term in all modes
+     */
     @Override
     public ArrayList<String> getSurrogates() {
 
@@ -70,6 +85,12 @@ public class Surrogate implements iSurrogate {
 
     }
 
+    /**
+     * Prepare the statement for a sparql command.
+     * @param mode Could be "wide" or "narrowed"
+     * @param term_id It is the term in uppercase and underscore instead of spaces
+     * @return The sentence to be done in a string
+     */
     protected String preQuery(String mode, String term_id) {
         String query = "";
         if (mode.equals("wide")) {
@@ -80,7 +101,7 @@ public class Surrogate implements iSurrogate {
             query = " SELECT ?child " + "WHERE {<" + base_uri + term_id + ">"
                     + "  <" + base_uri + mode + ">  ?child} ";
         }
-        System.out.println(query);
+        //System.out.println(query);
         return query;
     }
 

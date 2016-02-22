@@ -17,22 +17,23 @@
 package jsentvar;
 
 import java.io.InputStream;
-//import static org.apache.jena.assembler.JA.Model;
+
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.util.FileManager;
 
 /**
- *
- * @author Guillem LLuch Moll <guillem72@gmail.com>
+ * Read an ontology in RDF/XML format and return the model
+ * @author Guillem LLuch Moll guillem72@gmail.com
  */
-public class RDFReader {
-
+public class RDFReader implements iReader{
+ 
     /**
-     *
-     * @param inputFileName
-     * @return
+     * Create a org.apache.jena.rdf.model from an RDF/XML file
+     * @param inputFileName The name of the RDF/XML file
+     * @return org.apache.jena.rdf.model form from the inputFileName
      */
+     @Override
     public Model reader(String inputFileName) {
         // create an empty model
         Model model = ModelFactory.createDefaultModel();
@@ -49,9 +50,11 @@ public class RDFReader {
 
 // write it to standard out
         //model.write(System.out);
-
+     
         return model;
     }
+    
+  
 }
 
 

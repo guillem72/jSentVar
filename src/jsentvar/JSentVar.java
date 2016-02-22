@@ -1,18 +1,12 @@
 package jsentvar;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Iterator;
-import org.apache.jena.query.Query;
-import org.apache.jena.query.QueryExecution;
-import org.apache.jena.query.QueryExecutionFactory;
-import org.apache.jena.query.QueryFactory;
-import org.apache.jena.query.ResultSet;
-import org.apache.jena.query.ResultSetFormatter;
+
 import org.apache.jena.rdf.model.Model;
-import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Resource;
-import org.apache.jena.rdf.model.Statement;
-import org.apache.jena.rdf.model.StmtIterator;
+
 
 /**
  *
@@ -22,27 +16,37 @@ public class JSentVar {
 
     /**
      * @param args the command line arguments
+     * 
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws FileNotFoundException, IOException  {
         // org.apache.log4j.Logger.getRootLogger().setLevel(org.apache.log4j.Level.OFF);
         //Log.setLog4j("jena-log4j.properties");
+        
         RDFReader lector = new RDFReader();
         String filename;
-        filename = "/root/sincron/programacio/java"+
-                "/netbeans/jSentVar/resources/IEEE_reasoner20022016.owl";
-        Model model = ModelFactory.createDefaultModel();
+        filename = "resources/test/miniReasoner.owl";
+        Model model;
         
-        String term_value = "Approximation methods";
+        String term_value0 = "intelligent_systems";
+        String term_value = term_value0.substring(0, 1).toUpperCase() +term_value0.substring(1);
         model = lector.reader(filename);
+        
+             
+        
         Resource term = model.getResource(term_value);
-        //StmtIterator properties = term.listProperties();
+       
         System.out.print(term.toString() + "\n");
         
         Surrogate sur=new Surrogate(term_value,model);
-        //ArrayList <String> new_terms=sur.getSurrogates("wide");
-        ArrayList <String> new_terms=sur.getSurrogates();
+      
+        ArrayList <String> new_terms=sur.getSurrogates("wide");
         System.out.println(new_terms.toString());
 
+        
+        //Test Results generation
+   GenerateTestsResults gtr=new GenerateTestsResults(model);
+       // gtr.getUrisResult();
+       //gtr.readerResult();
         
     }
 
