@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 Guillem LLuch Moll <guillem72@gmail.com>
+ * Copyright (C) 2016 Guillem LLuch Moll guillem72@gmail.com
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -12,7 +12,7 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see http://www.gnu.org/licenses/.
  */
 package jsentvar;
 
@@ -22,7 +22,7 @@ import java.util.HashMap;
 
 /**
  *
- * @author Guillem LLuch Moll <guillem72@gmail.com>
+ * @author Guillem LLuch Moll guillem72@gmail.com
  */
 public class Variations {
     protected String phrase;

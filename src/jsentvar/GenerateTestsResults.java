@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 Guillem LLuch Moll <guillem72@gmail.com>
+ * Copyright (C) 2016 Guillem LLuch Moll guillem72@gmail.com
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -12,20 +12,21 @@
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see http://www.gnu.org/licenses
  */
 package jsentvar;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import org.apache.commons.io.FileUtils;
 import org.apache.jena.rdf.model.Model;
 
 /**
  * Aux class for generate several file to tests the classes
  * 
- * @author Guillem LLuch Moll <guillem72@gmail.com>
+ * @author Guillem LLuch Moll guillem72@gmail.com
  */
 public class GenerateTestsResults {
 
@@ -64,6 +65,15 @@ public class GenerateTestsResults {
         System.out.println("readerResult():");
         System.out.println(model1.toString());
         FileUtils.writeStringToFile(new File("resources/test/mini_model.txt"), model1.toString(), "utf8");
+    }
+    
+    public void jsonReaderResult() throws IOException{
+        String possFile="resources/text_doc0.json";
+        JsonReader jreader=new JsonReader();
+        HashMap<String,HashMap<Integer,Integer>>poss=jreader.reader(possFile);
+        System.out.println(poss.toString());
+        FileUtils.writeStringToFile(new File("resources/test/doc0Result.txt"), poss.toString(), "utf8");
+          
     }
 
 }
