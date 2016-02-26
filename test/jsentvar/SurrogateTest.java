@@ -16,7 +16,11 @@
  */
 package jsentvar;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import org.apache.commons.io.FileUtils;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.Resource;
 import org.junit.After;
@@ -126,6 +130,35 @@ public class SurrogateTest {
         String result = instance.preQuery(mode, term_id).trim();
         assertEquals(expResult, result);
       
+    }
+
+    /**
+     * Test of surrogatesForeach method, of class Surrogate.
+     */
+    @Test
+    public void testSurrogatesForeach() throws IOException {
+        System.out.println("surrogatesForeach");
+    
+        RDFReader lector = new RDFReader();
+        String filename;
+        filename = "resources/test/miniReasoner.owl";
+        Model model;
+       //String term_value = term_value0.substring(0, 1).toUpperCase() +term_value0.substring(1);
+       
+              model = lector.reader(filename);
+        ArrayList<String> terms0=new ArrayList<>();
+        terms0.add("military satellites");
+        terms0.add("intelligent_systems");
+        
+        Surrogate sur=new Surrogate(model);
+        HashMap<String, ArrayList<String>> result ;
+        Utils utils=new Utils();
+        ArrayList<String> terms = utils.firstUpperForeach(terms0);
+        result=sur.surrogatesForeach(terms);
+        System.out.println(result.toString());
+        String expResult=FileUtils.readFileToString(new File("resources/test/surrogateForeachResult.txt"), "utf8");
+        assertEquals(expResult, result.toString());
+        
     }
     
 }

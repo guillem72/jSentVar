@@ -1,34 +1,67 @@
+/*
+ * Copyright (C) 2016 Guillem LLuch Moll guillem72@gmail.com
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package jsentvar;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 import org.apache.commons.io.FileUtils;
-
 import org.apache.jena.rdf.model.Model;
-import org.apache.jena.rdf.model.Resource;
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+import static org.junit.Assert.*;
 
 /**
  *
  * @author Guillem LLuch Moll guillem72@gmail.com
  */
-public class JSentVar {
+public class SubstitutionTest {
+    
+    public SubstitutionTest() {
+    }
+    
+    @BeforeClass
+    public static void setUpClass() {
+    }
+    
+    @AfterClass
+    public static void tearDownClass() {
+    }
+    
+    @Before
+    public void setUp() {
+    }
+    
+    @After
+    public void tearDown() {
+    }
 
     /**
-     * @param args the command line arguments
-     * @throws java.io.FileNotFoundException When reads a file
-     *
+     * Test of oneTerm method, of class Substitution.
      */
-    public static void main(String[] args) throws FileNotFoundException, IOException {
-        // org.apache.log4j.Logger.getRootLogger().setLevel(org.apache.log4j.Level.OFF);
-        //Log.setLog4j("jena-log4j.properties");
-
-//Get terms for substitution
+    @Test
+    public void testOneTerm() throws IOException {
+        System.out.println("Substitution.oneTerm() Test");
         RDFReader lector = new RDFReader();
         String filename;
         //filename = "resources/test/miniReasoner.owl";
@@ -39,7 +72,7 @@ public class JSentVar {
         model = lector.reader(filename);
         
 //Read positions, a json file
-        String possFile = "resources/text_doc0.json";
+        String possFile = "resources/test/text_doc0.json";
         JsonReader jreader = new JsonReader();
         HashMap<String, HashMap<Integer, Integer>> poss = jreader.reader(possFile);
         /*
@@ -70,10 +103,8 @@ ArrayList<String> terms0 = new ArrayList<>();
         //System.out.println(alternatives.toString());
         
        
-        String docFile="resources/tex_doc0.txt";
-        String dirTarget="out/files/";
-        String fileTarget="doc0_alt";
-        String doc=FileUtils.readFileToString(new File(docFile),"utf8");
+        String docFile="resources/test/tex_doc0.txt";
+       String doc=FileUtils.readFileToString(new File(docFile),"utf8");
         Substitution gen=new Substitution();
        HashSet newDocs =new HashSet();
          for (String term:terms){
@@ -81,21 +112,12 @@ ArrayList<String> terms0 = new ArrayList<>();
            HashSet newDocs0=gen.oneTerm(doc, term, alternatives.get(term));
            newDocs.addAll(newDocs0);
         }
-         int i=0;
-         for (Object newDoc:newDocs){
-             i++;
-             String name;
-             name=dirTarget+fileTarget+Integer.toString(i)+".txt";
-             FileUtils.writeStringToFile(new File(name),(String) newDoc, "utf8");
-         }
+               
+        String expResult = FileUtils.readFileToString
+        (new File("resources/test/substitutionOneTermResult.txt"),
+                "utf8");
+        assertEquals(expResult, newDocs.toString());
         
-//Test Results generation
-
-        //GenerateTestsResults gtr = new GenerateTestsResults(model);
-        // gtr.getUrisResult();
-        //gtr.readerResult();
-        //gtr.surrogateForeachResult();
-         // gtr.substitutionOneTermResult();
     }
-
+    
 }

@@ -17,6 +17,8 @@
 package jsentvar;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 
 import org.apache.jena.rdf.model.Model;
 
@@ -45,6 +47,15 @@ public class Surrogate implements iSurrogate {
         dataMapper.setModel(this.model);
     }
 
+      public Surrogate(Model model) {
+        this.term = "";
+        this.model = model;
+        dataMapper = new DataMapper();
+        dataMapper.setModel(this.model);
+    }
+
+    
+    
     /**
      * Retrieve the terms related to the surrogate.term in the model
      * @param mode In this implementation could be "wide" or "narrowed".
@@ -52,8 +63,10 @@ public class Surrogate implements iSurrogate {
      */
     @Override
     public ArrayList<String> getSurrogates(String mode) {
-        String term_id = this.term.replace(" ", "_");
         ArrayList<String> surros = new ArrayList<>();
+        if (this.term.isEmpty()) return surros;
+        String term_id = this.term.replace(" ", "_");
+        
         ArrayList<String> uris;
         String queryString = preQuery(mode, term_id);
         if (queryString.isEmpty()) {
@@ -77,10 +90,11 @@ public class Surrogate implements iSurrogate {
      */
     @Override
     public ArrayList<String> getSurrogates() {
-
+         //System.out.println(this.term);
         ArrayList<String> surros;
         surros=getSurrogates("wide");
         surros.addAll(this.getSurrogates("narrowed"));
+        //System.out.println(surros);
         return surros;
 
     }
@@ -105,4 +119,20 @@ public class Surrogate implements iSurrogate {
         return query;
     }
 
+    /**
+     * Given a terms[], get the list of related terms. 
+     * @param terms  a list of term. The function return the related terms for each one.
+     * @return an array term -&gt; term[]
+     */
+    public HashMap <String,ArrayList<String>> surrogatesForeach(ArrayList<String> terms){
+         HashMap <String,ArrayList<String>> all=new  HashMap <>();
+        for (String term0 : terms) {
+            this.term=term0;
+            ArrayList<String> related;
+            related=this.getSurrogates();
+            all.put(term, related);
+        }
+         return all;
+    
+    }
 }

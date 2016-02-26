@@ -20,12 +20,14 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
 import org.apache.commons.io.FileUtils;
 import org.apache.jena.rdf.model.Model;
 
 /**
  * Aux class for generate several file to tests the classes
- * 
+ *
  * @author Guillem LLuch Moll guillem72@gmail.com
  */
 public class GenerateTestsResults {
@@ -60,20 +62,74 @@ public class GenerateTestsResults {
         RDFReader lector = new RDFReader();
         String filename;
         filename = "resources/test/miniReasoner.owl";
-        Model model1 ;
+        Model model1;
         model1 = lector.reader(filename);
         System.out.println("readerResult():");
         System.out.println(model1.toString());
         FileUtils.writeStringToFile(new File("resources/test/mini_model.txt"), model1.toString(), "utf8");
     }
-    
-    public void jsonReaderResult() throws IOException{
-        String possFile="resources/text_doc0.json";
-        JsonReader jreader=new JsonReader();
-        HashMap<String,HashMap<Integer,Integer>>poss=jreader.reader(possFile);
+
+    public void jsonReaderResult() throws IOException {
+        String possFile = "resources/text_doc0.json";
+        JsonReader jreader = new JsonReader();
+        HashMap<String, HashMap<Integer, Integer>> poss = jreader.reader(possFile);
         System.out.println(poss.toString());
         FileUtils.writeStringToFile(new File("resources/test/doc0Result.txt"), poss.toString(), "utf8");
-          
+
+    }
+
+    public void surrogateForeachResult() throws IOException {
+        ArrayList<String> terms0 = new ArrayList<>();
+        terms0.add("military satellites");
+        terms0.add("intelligent_systems");
+
+        Surrogate sur = new Surrogate(model);
+        HashMap<String, ArrayList<String>> Result;
+        Utils utils = new Utils();
+        ArrayList<String> terms = utils.firstUpperForeach(terms0);
+        Result = sur.surrogatesForeach(terms);
+        FileUtils.writeStringToFile(new File("resources/test/surrogateForeachResult.txt"), Result.toString(), "utf8");
+
+    }
+
+    public void substitutionOneTermResult() throws IOException {
+ RDFReader lector = new RDFReader();
+        String filename;
+        //filename = "resources/test/miniReasoner.owl";
+        filename="resources/IEEE_reasoner20022016.owl";
+        //String term_value = term_value0.substring(0, 1).toUpperCase() +term_value0.substring(1);
+        
+        model = lector.reader(filename);
+        
+        
+//Read positions, a json file
+       String possFile = "resources/test/text_doc0.json";
+        JsonReader jreader = new JsonReader();
+        HashMap<String, HashMap<Integer, Integer>> poss = jreader.reader(possFile);
+        ArrayList<String> terms1 = new ArrayList<>();
+
+        Set originS = poss.keySet();
+        terms1.addAll(originS);
+
+//Get all the terms for substitution
+        Surrogate sur = new Surrogate(model);
+        HashMap<String, ArrayList<String>> alternatives;
+        Utils utils = new Utils();
+        ArrayList<String> terms = utils.firstUpperForeach(terms1);
+        alternatives = sur.surrogatesForeach(terms);
+        String docFile = "resources/tex_doc0.txt";
+        String doc = FileUtils.readFileToString(new File(docFile), "utf8");
+        Substitution gen = new Substitution();
+        HashSet newDocs = new HashSet();
+        for (String term : terms) {
+            //System.out.println(term);
+            HashSet newDocs0 = gen.oneTerm(doc, term, alternatives.get(term));
+            newDocs.addAll(newDocs0);
+        }
+        FileUtils.writeStringToFile
+        (new File("resources/test/substitutionOneTermResult.txt"), 
+                newDocs.toString(), "utf8");
+
     }
 
 }
