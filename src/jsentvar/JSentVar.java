@@ -3,7 +3,6 @@ package jsentvar;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -11,7 +10,6 @@ import java.util.Set;
 import org.apache.commons.io.FileUtils;
 
 import org.apache.jena.rdf.model.Model;
-import org.apache.jena.rdf.model.Resource;
 
 /**
  *
@@ -21,18 +19,21 @@ public class JSentVar {
 
     /**
      * @param args the command line arguments
+     * args0 the taxonomy
+     * args1 the positions
+     * args2 the doc
      * @throws java.io.FileNotFoundException When reads a file
      *
      */
     public static void main(String[] args) throws FileNotFoundException, IOException {
-        // org.apache.log4j.Logger.getRootLogger().setLevel(org.apache.log4j.Level.OFF);
-        //Log.setLog4j("jena-log4j.properties");
-
+        
 //Get terms for substitution
         RDFReader lector = new RDFReader();
         String filename;
         //filename = "resources/test/miniReasoner.owl";
         filename="resources/IEEE_reasoner20022016.owl";
+        if (args.length>0) filename=args[0];
+        //System.out.println(args[0]+" "+args[1]+" "+args[2]);
         Model model;
         //String term_value = term_value0.substring(0, 1).toUpperCase() +term_value0.substring(1);
         
@@ -40,6 +41,7 @@ public class JSentVar {
         
 //Read positions, a json file
         String possFile = "resources/text_doc0.json";
+        if (args.length>1) possFile=args[1];
         JsonReader jreader = new JsonReader();
         HashMap<String, HashMap<Integer, Integer>> poss = jreader.reader(possFile);
         /*
@@ -72,6 +74,7 @@ ArrayList<String> terms0 = new ArrayList<>();
         //alternatives is a term->related[] hashmap<string,arraylist>
        
         String docFile="resources/tex_doc0.txt";
+         if (args.length>2) docFile=args[2];
         String dirTarget="out/files/";
         String fileTarget="doc0_alt";
         String doc=FileUtils.readFileToString(new File(docFile),"utf8");
