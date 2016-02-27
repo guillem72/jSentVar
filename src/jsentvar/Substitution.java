@@ -17,7 +17,9 @@
 package jsentvar;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Set;
 
 /**
  * A class for substitutes in a doc some terms by others.
@@ -27,7 +29,7 @@ import java.util.HashSet;
 public class Substitution {
 
     /**
-     * Substitutes ther term "original" in "doc" for each candidate in
+     * Substitutes the term "original" in "doc" for each candidate in
      * "candidates".
      *
      * @param doc The document where substitutions will make.
@@ -47,6 +49,27 @@ public class Substitution {
             }
         }
 
+        return newDocs;
+    }
+
+    /**
+     * Substitutes each term in "doc" for each related term. 
+     * @param doc The base text  where to do substituions
+     * @param alternatives A HashMap. The keys are the original terms in doc and 
+     * alternatives are, for each term, an arrayList with all the substitutive terms.
+     * @return terms -&gt; doc_with_term_substituted[]
+     */
+    public HashSet 
+        allTerms(String doc, HashMap<String, 
+                ArrayList<String>> alternatives) {
+        Set terms=alternatives.keySet();
+        HashSet newDocs = new HashSet();
+        for (Object term0 : terms) {
+            System.out.println(term0);
+            String term=(String) term0;
+            HashSet newDocs0 = this.oneTerm(doc, term, alternatives.get(term));
+            newDocs.addAll(newDocs0);
+        }
         return newDocs;
     }
 }

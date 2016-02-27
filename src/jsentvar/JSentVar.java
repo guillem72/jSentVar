@@ -68,19 +68,15 @@ ArrayList<String> terms0 = new ArrayList<>();
         ArrayList<String> terms = utils.firstUpperForeach(terms1);
         alternatives= sur.surrogatesForeach(terms);
         //System.out.println(alternatives.toString());
-        
+        //terms is the terms from taxonomy appering in doc
+        //alternatives is a term->related[] hashmap<string,arraylist>
        
         String docFile="resources/tex_doc0.txt";
         String dirTarget="out/files/";
         String fileTarget="doc0_alt";
         String doc=FileUtils.readFileToString(new File(docFile),"utf8");
         Substitution gen=new Substitution();
-       HashSet newDocs =new HashSet();
-         for (String term:terms){
-         System.out.println(term);
-           HashSet newDocs0=gen.oneTerm(doc, term, alternatives.get(term));
-           newDocs.addAll(newDocs0);
-        }
+       HashSet newDocs =gen.allTerms(doc, alternatives);
          int i=0;
          for (Object newDoc:newDocs){
              i++;
