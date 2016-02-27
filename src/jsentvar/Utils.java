@@ -57,4 +57,10 @@ public class Utils {
         
         return doc;
     }
+    
+    public static boolean containsCaseInsensitive(String doc, String term){
+        String docl=doc.toLowerCase();
+        String terml=term.toLowerCase();
+        return docl.contains(terml);
+    }
 }

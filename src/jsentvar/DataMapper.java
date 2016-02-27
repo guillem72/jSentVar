@@ -121,5 +121,28 @@ public class DataMapper {
         return result;
     }
     
+    public ArrayList<String> getAllLabels(){
+        ArrayList<String> labels=new ArrayList<>();
+          String querylabel=" SELECT ?label " + "WHERE { ?uri <http://www.w3.org/2000/01/rdf-schema#label>"+
+          "  ?label} ";
+          Query query = QueryFactory.create(querylabel);
+
+        try (// Execute the query and obtain results
+                QueryExecution qe = QueryExecutionFactory.create(query, this.model)) {
+            ResultSet results = qe.execSelect();
+
+            for (; results.hasNext();) {
+                // Access variables: soln.get("x") ;
+                RDFNode n;
+                QuerySolution soln = results.next();
+                n = soln.get("label");
+                String labelLang=n.toString();
+                String label0=labelLang.split("@")[0];
+                labels.add(label0.trim());
+               
+            }
+        }
+       return labels;
+    }
     
 }
