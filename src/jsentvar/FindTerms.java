@@ -16,9 +16,11 @@
  */
 package jsentvar;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
+import java.util.Stack;
 
 /**
  *
@@ -26,51 +28,64 @@ import java.util.Set;
  */
 public class FindTerms {
 
-    public static ArrayList<String> candidates;
+    public static ArrayList<String> vocabulary;
 
+    /**
+     *  Return all the terms from the vocabulary found in doc0. Note that return the 
+     * larger term found, so for "Management System" it returns one term not "Management"
+     * and "System".
+     * @param doc0 The doc where the terms will be searched
+     * @return A list made by the found terms. 
+     */
     public ArrayList<String> found(String doc0) {
         String doc = doc0.toLowerCase();
         HashMap<String, Integer> hits = new HashMap<>();
-        for (String candi0 : candidates) {
+        for (String candi0 : vocabulary) {
             String candi = candi0.toLowerCase();
             if (doc.contains(candi)) {
-                System.out.println(candi + " found");
-                if (hits.containsKey(candi)) {
-                    hits.replace(candi, hits.get(candi) + 1);
-                } else {
-                    hits.put(candi, 1);
-                }
+                //System.out.println(candi + " found");
+                
+                    String[] parts=doc.split(candi);
+                    //System.out.println(" Parts="+parts);
+                    hits.put(candi,parts.length-1);
+                
             }
         }
-        System.out.println("hits=" + hits.toString());
+        //System.out.println("hits=" + hits.toString());
         return removeInsideTerms(hits);
     }
 
+    /**
+     * Internal function which removes a term that is part of another term.
+     * @param f An array term-&gt; hits of the term
+     * @return A list without the non proper terms deleted.
+     */
     protected ArrayList<String> removeInsideTerms(HashMap<String, Integer> f) {
-        ArrayList<String> terms = new ArrayList<>();
-
-        Set keys = f.keySet();
-        ArrayList<String> rest = new ArrayList<>();
+        ArrayList<String> terms = new ArrayList<>();//the good
+        Stack pila=new Stack();
         
-        rest.addAll(keys);
-        for (Object key : keys) {
-            String term = (String) key;
-            rest.remove(term);
-            if (!rest.isEmpty()) {
-                for (String other : rest) {
-                    if (!other.contains(term) && !term.contains(other)) {
-                        terms.add(term);
-                    } else {
-                        if (f.get(other) < f.get(term) && other.contains(term)) {
-                            terms.add(term);
-                        }
-                        if (term.contains(other) && f.get(other) <= f.get(term)) {
-                            rest.remove(other);
-                        }
-                    }//else
-                }//for (String other : rest)
-            }
-        }//for (Object key : keys)
+        Set keys = f.keySet();//all term found, term form part of other term, too
+        pila.addAll(keys);
+        
+       while (!pila.empty()){ 
+       String t1=(String) pila.pop();
+                Stack rest=(Stack)pila.clone();
+                while (!rest.empty()){
+                    String t2=(String)rest.pop();
+                    //if one term t2 is in the other t1 and apper the same number of times,  
+                    //it means than t2 is not a proper term, only is part of a larger term so
+                    //it has to be removed (from f).
+                    if (t1.contains(t2) && f.get(t1)>=f.get(t2)){//TODO throw error if f.get(t1)>f.get(t2)
+                        //.remove(t2);
+                        f.remove(t2);
+                    }
+                    if (t2.contains(t1) && f.get(t2)>=f.get(t1)){//TODO throw error if f.get(t2)>f.get(t1)
+                        f.remove(t1);
+                    }
+                }
+       }
+       terms.addAll(f.keySet());
+       
         return terms;
     }
 }

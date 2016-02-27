@@ -43,11 +43,11 @@ public class JSentVar {
         //System.out.println(labels.size());
         
         FindTerms finder=new FindTerms();
-        FindTerms.candidates=labels;
+        FindTerms.vocabulary=labels;
         String docFile="resources/tex_doc0.txt";
          String doc=FileUtils.readFileToString(new File(docFile),"utf8");
         ArrayList<String> f=finder.found(doc);
-        System.out.println(f);
+        //System.out.println(f);
         
 //Read positions, a json file
         String possFile = "resources/text_doc0.json";
@@ -91,10 +91,12 @@ public class JSentVar {
 //Test Results generation
 
         //GenerateTestsResults gtr = new GenerateTestsResults(model);
+        //gtr.findTermsFoundResults();
         // gtr.getUrisResult();
         //gtr.readerResult();
         //gtr.surrogateForeachResult();
          // gtr.substitutionOneTermResult();
+         
     }
 
 }

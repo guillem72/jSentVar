@@ -131,5 +131,21 @@ public class GenerateTestsResults {
                 newDocs.toString(), "utf8");
 
     }
+    
+    public void findTermsFoundResults() throws IOException{
+        DataMapper dm=new DataMapper();
+        dm.setModel(model);
+        ArrayList<String> labels=dm.getAllLabels();
+        //System.out.println(labels.size());
+        
+        FindTerms finder=new FindTerms();
+        FindTerms.vocabulary=labels;
+        String docFile="resources/test/findtermsdoc.txt";
+         String doc=FileUtils.readFileToString(new File(docFile),"utf8");
+        ArrayList<String> f=finder.found(doc);
+        System.out.println(f);
+        FileUtils.writeStringToFile(new File("resources/test/findtermsdocResult.txt"),
+                f.toString(), "utf8");
+    }
 
 }
