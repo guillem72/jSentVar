@@ -44,12 +44,14 @@ public class JSentVar {
         
         FindTerms finder=new FindTerms();
         FindTerms.vocabulary=labels;
-        String docFile="resources/tex_doc0.txt";
+        //String docFile="resources/tex_doc0.txt";
+        String docFile="resources/a1.txt";
          String doc=FileUtils.readFileToString(new File(docFile),"utf8");
         ArrayList<String> f=finder.found(doc);
-        //System.out.println(f);
+        System.out.println(f);
         
-//Read positions, a json file
+         /*
+        //Read positions, a json file
         String possFile = "resources/text_doc0.json";
         if (args.length>1) possFile=args[1];
         JsonReader jreader = new JsonReader();
@@ -60,7 +62,7 @@ public class JSentVar {
           terms1.addAll(originS);
         System.out.println(terms1);
 
-        
+       
 //Get all the terms for substitution
 
         Surrogate sur = new Surrogate(model);
@@ -87,7 +89,7 @@ public class JSentVar {
              name=dirTarget+fileTarget+Integer.toString(i)+".txt";
              FileUtils.writeStringToFile(new File(name),(String) newDoc, "utf8");
          }
-        
+        */
 //Test Results generation
 
         //GenerateTestsResults gtr = new GenerateTestsResults(model);

@@ -16,7 +16,6 @@
  */
 package jsentvar;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
@@ -42,7 +41,8 @@ public class FindTerms {
         HashMap<String, Integer> hits = new HashMap<>();
         for (String candi0 : vocabulary) {
             String candi = candi0.toLowerCase();
-            if (doc.contains(candi)) {
+            if (Utils.stringContains(doc,candi)) {
+                //if (doc.contains(candi)) {
                 //System.out.println(candi + " found");
                 
                     String[] parts=doc.split(candi);
@@ -51,7 +51,7 @@ public class FindTerms {
                 
             }
         }
-        //System.out.println("hits=" + hits.toString());
+        System.out.println("hits=" + hits.toString());
         return removeInsideTerms(hits);
     }
 

@@ -17,6 +17,8 @@
 package jsentvar;
 
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  *
@@ -61,6 +63,20 @@ public class Utils {
     public static boolean containsCaseInsensitive(String doc, String term){
         String docl=doc.toLowerCase();
         String terml=term.toLowerCase();
-        return docl.contains(terml);
+        return Utils.stringContains(docl,terml);
+        //return docl.contains(terml);
+    }
+    
+    public static boolean stringContains(String text, String term){
+    String patternString = "\\b(" + term + ")\\b";
+    boolean found=false;
+    Pattern pattern = Pattern.compile(patternString);
+    Matcher matcher = pattern.matcher(text);
+    if (matcher.find()) found=true;
+//while (matcher.find()) {
+ //   System.out.println(matcher.group(1));
+//}
+    //System.out.println(term+"\n");
+return found;
     }
 }
